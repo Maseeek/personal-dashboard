@@ -50,7 +50,7 @@ export default function LEDCard({
   dragHandleProps
 }: LEDCardProps) {
   // Settings & Host IP configuration
-  const [ledHost, setLedHost] = useState("192.168.1.100");
+  const [ledHost, setLedHost] = useState("127.0.0.1");
   const [ledPort, setLedPort] = useState(5000);
   const [isEditingSettings, setIsEditingSettings] = useState(false);
   const [inputHost, setInputHost] = useState("");
@@ -71,7 +71,7 @@ export default function LEDCard({
   useEffect(() => {
     const timer = setTimeout(() => {
       const userSettings = db.getSettings();
-      const host = userSettings.ledHost || "192.168.1.100";
+      const host = userSettings.ledHost || "127.0.0.1";
       const port = userSettings.ledPort || 5000;
       setLedHost(host);
       setLedPort(port);

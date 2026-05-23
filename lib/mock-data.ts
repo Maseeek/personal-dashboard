@@ -88,6 +88,6 @@ export const initialSettings: DashboardSettings = {
   awakeEndHour: 24,
   monthlyIncomeGoal: 4000,
   monthlyExpenseLimit: 1500,
-  ledHost: "192.168.1.100",
+  ledHost: "127.0.0.1",
   ledPort: 5000
 };

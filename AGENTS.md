@@ -52,17 +52,29 @@ To enable standalone local development and robust network error tolerance, the d
 ## 5. Development & Build Commands
 
 - **Node.js Version**: The project requires Node.js v20+. The system default may be v18, which will cause Next.js build failures.
-- **Command Prefix**: Always prefix development and build commands by sourcing `nvm` to use node 20:
-  ```bash
-  . ~/.nvm/nvm.sh && nvm use 20 && npm run dev
-  ```
-  ```bash
-  . ~/.nvm/nvm.sh && nvm use 20 && npm run build
-  ```
+- **Command Prefix / Execution**:
+  - **Linux**: Always prefix development and build commands by sourcing `nvm` if necessary:
+    ```bash
+    . ~/.nvm/nvm.sh && nvm use 20 && npm run dev
+    ```
+    ```bash
+    . ~/.nvm/nvm.sh && nvm use 20 && npm run build
+    ```
+  - **Windows 11**: Run the commands directly (e.g., in PowerShell or cmd) if Node.js v20+ is already active, or use `nvm use 20` first if using NVM for Windows:
+    ```powershell
+    nvm use 20
+    npm run dev
+    ```
+    ```powershell
+    nvm use 20
+    npm run build
+    ```
 
 ## 6. Antigravity Agent Guidelines & Optimization
 
 - **MCP Tools**: When local development is running (`npm run dev`), invoke tools on the `next-devtools` MCP server (e.g. `get_errors`, `get_routes`, `get_page_metadata`) to monitor server state, diagnose runtime issues, or trace routing.
-- **Local Skills**: Refer to [skills/glassmorphism/SKILL.md](file:///home/maciek/Documents/personal-dashboard/skills/glassmorphism/SKILL.md) and [skills/data-sync/SKILL.md](file:///home/maciek/Documents/personal-dashboard/skills/data-sync/SKILL.md) before writing styling or data fetching hooks. Use these files as developer instruction guides.
+- **Local Skills**: Refer to these guides before writing styling or data fetching hooks:
+  - **Windows Paths**: [skills/glassmorphism/SKILL.md](file:///c:/Coding/personal-dashboard/skills/glassmorphism/SKILL.md) and [skills/data-sync/SKILL.md](file:///c:/Coding/personal-dashboard/skills/data-sync/SKILL.md)
+  - **Linux Paths**: [skills/glassmorphism/SKILL.md](file:///home/maciek/Documents/personal-dashboard/skills/glassmorphism/SKILL.md) and [skills/data-sync/SKILL.md](file:///home/maciek/Documents/personal-dashboard/skills/data-sync/SKILL.md)
 - **Task Tracking**: Track implementation progress in the workspace `task.md` file. Always update tasks to completed `[x]` as soon as verification succeeds.
 - **File Edits**: Prefer `replace_file_content` for localized edits, and keep codebase edits focused to preserve clean git diffs.

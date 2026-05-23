@@ -31,6 +31,7 @@ export default function MetricsCard({
   className = ""
 }: MetricsCardProps) {
   const [isSyncing, setIsSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<"synced" | "syncing" | "local" | "error">("local");
   const [isEditingManual, setIsEditingManual] = useState(false);
 
   // Edit fields state
@@ -47,22 +48,41 @@ export default function MetricsCard({
   const lightPercent = (metrics.sleepBreakdown.light / totalBreakdown) * 100;
   const remPercent = (metrics.sleepBreakdown.rem / totalBreakdown) * 100;
 
-  // Simulate Fitbit Air Sync API call
-  const handleSync = () => {
+  // Google Health API sync call
+  const handleSync = async () => {
     setIsSyncing(true);
-    setTimeout(() => {
-      // Simulate slightly updated numbers
-      const stepsDelta = Math.floor(Math.random() * 500) + 100;
-      const updatedMetrics: HealthMetrics = {
-        ...metrics,
-        steps: Math.min(metrics.stepsGoal + 1200, metrics.steps + stepsDelta),
-        avgHeartRate: Math.floor(62 + Math.random() * 6),
-      };
+    setSyncStatus("syncing");
+    try {
+      const res = await fetch("/api/health/sync", {
+        method: "POST",
+      });
+      
+      if (res.status === 400 || res.status === 401) {
+        const data = await res.json();
+        if (data.error === "need_auth") {
+          // Automatically redirect to Google OAuth integration flow
+          window.location.href = "/api/auth/google";
+          return;
+        }
+      }
+
+      if (!res.ok) {
+        throw new Error("API sync failed");
+      }
+
+      const updatedMetrics = await res.json();
       onUpdateMetrics(updatedMetrics);
       setEditSteps(updatedMetrics.steps);
+      setEditSleep(updatedMetrics.sleepHours);
       setEditAvgHR(updatedMetrics.avgHeartRate);
+      setSyncStatus("synced");
+    } catch (err) {
+      console.warn("Google Health API sync failed, falling back to local:", err);
+      setSyncStatus("error");
+      setTimeout(() => setSyncStatus("local"), 4000);
+    } finally {
       setIsSyncing(false);
-    }, 1500);
+    }
   };
 
   const handleSaveEdit = (e: React.FormEvent) => {
@@ -85,7 +105,34 @@ export default function MetricsCard({
           <div className="flex items-center gap-3">
             <div className="flex flex-col gap-1 text-left">
               <h2 className="text-sm uppercase tracking-widest text-zinc-400 font-mono font-medium">FITBIT HEALTH</h2>
-              {!isCollapsed && <p className="text-[10px] font-mono text-zinc-500">BIOMETRIC TRACKING // SYNCD</p>}
+              {!isCollapsed && (
+                <div className="text-[9px] font-mono text-zinc-500 flex items-center gap-1.5 select-none">
+                  {syncStatus === "synced" && (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] animate-pulse" />
+                      <span>SYNCED TO CLOUD</span>
+                    </>
+                  )}
+                  {syncStatus === "syncing" && (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)] animate-ping" />
+                      <span>SYNCING...</span>
+                    </>
+                  )}
+                  {syncStatus === "local" && (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-500" />
+                      <span>SAVED LOCALLY</span>
+                    </>
+                  )}
+                  {syncStatus === "error" && (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.5)]" />
+                      <span>SYNC ERROR // LOCAL VIEW</span>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
             {isCollapsed && (
               <div className="flex items-center gap-1.5 font-mono text-[9px] bg-white/5 border border-white/10 px-2 py-0.5 rounded text-zinc-400">

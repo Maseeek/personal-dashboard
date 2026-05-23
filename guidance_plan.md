@@ -61,5 +61,5 @@ Regardless of the stack, we will use a relational schema containing:
 
 ## 4. Next Steps
 1. Align on the stack choice (Option A or Option B).
-2. Clean out the temporary files in `/home/maciek/Documents/dashboard` to prepare the directory.
+2. Clean out any temporary files in the project workspace directory to prepare the directory.
 3. Scaffold the chosen codebase structure.

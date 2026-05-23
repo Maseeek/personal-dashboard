@@ -30,11 +30,23 @@ A premium, interactive, dark-mode personal productivity and health tracking dash
 * **Node.js**: The project requires **Node.js v20** or higher (Next.js 16 compiler requirement).
 
 ### How to Start the Development Server
-Since your terminal environment may default to Node 18, always launch the dev server by loading `nvm` first:
+Depending on your operating system:
 
+#### Linux
 ```bash
 # Source NVM, load Node 20, and start the development server
 . ~/.nvm/nvm.sh && nvm use 20 && npm run dev
+```
+
+#### Windows 11
+If Node.js v20+ is already active in your command line, run:
+```powershell
+npm run dev
+```
+Otherwise, if you use NVM for Windows:
+```powershell
+nvm use 20
+npm run dev
 ```
 
 The server will spin up and run on [http://localhost:3000](http://localhost:3000).
@@ -42,9 +54,15 @@ The server will spin up and run on [http://localhost:3000](http://localhost:3000
 ### Build for Production
 To verify and compile the optimized production bundle:
 
+#### Linux
 ```bash
 # Source NVM, load Node 20, and compile the production build
 . ~/.nvm/nvm.sh && nvm use 20 && npm run build
+```
+
+#### Windows 11
+```powershell
+npm run build
 ```
 
 ---
