@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050506;
+  --foreground: #f4f4f5;
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --accent-orange: #e07658;
+  --accent-orange-rgb: 224, 118, 88;
+  --font-sans: var(--font-outfit), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Film Grain Dot Overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 3 3' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1.5' cy='1.5' r='0.6' fill='%23ffffff' fill-opacity='0.014'/%3E%3C/svg%3E");
+  background-size: 3px 3px;
+}
+
+/* Glassmorphism card utility */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Background Drifting Gradients Keyframes */
+@keyframes drift-orange-keyframes {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(8%, -6%) scale(1.15);
+  }
+  66% {
+    transform: translate(-5%, 8%) scale(0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes drift-grey-keyframes {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-10%, 12%) scale(1.1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.drift-orange {
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 1000px;
+  max-height: 1000px;
+  background: radial-gradient(circle, rgba(224, 118, 88, 0.16) 0%, rgba(224, 118, 88, 0) 70%);
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+  animation: drift-orange-keyframes 36s ease-in-out infinite;
+}
+
+.drift-grey {
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 85vw;
+  height: 85vw;
+  max-width: 1200px;
+  max-height: 1200px;
+  background: radial-gradient(circle, rgba(180, 180, 200, 0.06) 0%, rgba(180, 180, 200, 0) 75%);
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+  animation: drift-grey-keyframes 36s ease-in-out infinite;
+}
+
+/* Nasdaq Ticker Marquee Animations */
+@keyframes marquee-horizontal {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-horizontal 30s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Edit Mode Card Styles */
+.card-editing {
+  border-style: dashed !important;
+  border-color: rgba(224, 118, 88, 0.4) !important;
+  box-shadow: 0 0 16px rgba(224, 118, 88, 0.1) !important;
+  animation: pulse-border 3s infinite ease-in-out;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: rgba(224, 118, 88, 0.3);
+    box-shadow: 0 0 16px rgba(224, 118, 88, 0.05);
+  }
+  50% {
+    border-color: rgba(224, 118, 88, 0.7);
+    box-shadow: 0 0 24px rgba(224, 118, 88, 0.2);
+  }
+}
+
+/* Draggable card cursor states */
+.card-draggable {
+  user-select: none;
+}
+.card-dragged {
+  opacity: 0.5;
+  border-color: rgba(224, 118, 88, 0.8) !important;
+}
+.card-drag-over {
+  border-style: dashed !important;
+  border-color: rgba(224, 118, 88, 0.6) !important;
+  background-color: rgba(224, 118, 88, 0.08) !important;
+  box-shadow: 0 0 24px rgba(224, 118, 88, 0.15) !important;
+  transform: scale(0.98);
+}
+
+
+
+
