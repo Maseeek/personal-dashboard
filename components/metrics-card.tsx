@@ -58,9 +58,9 @@ export default function MetricsCard({
       });
       
       if (res.status === 400 || res.status === 401) {
-        const data = await res.json();
-        if (data.error === "need_auth") {
-          // Automatically redirect to Google OAuth integration flow
+        const data = await res.json().catch(() => ({}));
+        if (data.error === "need_auth" || res.status === 401) {
+          // Automatically redirect to Google OAuth integration flow (which also logs you in)
           window.location.href = "/api/auth/google";
           return;
         }
